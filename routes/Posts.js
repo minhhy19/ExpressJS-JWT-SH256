@@ -1,8 +1,8 @@
 var router = require('express').Router();
-var verify = require('./VerifyToken');
+var { verifyAccessToken } = require('../helpers/jwt_helpers');
 
 
-router.get('/', verify, (req, res) => {
+router.get('/', verifyAccessToken, (req, res) => {
     // res.json({
     //     posts: {
     //         title: "My title",

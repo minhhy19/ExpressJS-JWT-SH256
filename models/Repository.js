@@ -72,11 +72,39 @@ exports.delete = async(table, id) => {
 
 //============================================================================================================
 
-exports.fetchbyEmail = async(table, email) => {
+exports.fetchByUsername = async(table, username) => {
     var client = new MongoClient(url, opt); //tao bien doi ket noi
     await client.connect();
     var db = client.db(dataBase); //khi co  tin hieu thi 
-    var a = await db.collection(table).findOne({email: email});
+    var a = await db.collection(table).findOne({username: username});
     await client.close();
     return a;
+}
+
+//================================================================================================================
+exports.fetchTokenByIdUser = async(table, idUser) => {
+    var client = new MongoClient(url, opt); //tao bien doi ket noi
+    await client.connect();
+    var db = client.db(dataBase); //khi co  tin hieu thi 
+    var a = await db.collection(table).findOne({idUser: idUser});
+    await client.close();
+    return a;
+}
+
+exports.updateTokenByIdUser = async(table, idUser, o) => {
+    var client = new MongoClient(url, opt); //tao bien doi ket noi
+    await client.connect();
+    var db =client.db(dataBase); //khi co  tin hieu thi 
+    var ret = await db.collection(table).updateOne({idUser: idUser}, {$set: o}); // mo member va insert 1 oject
+    await client.close();
+    return ret;
+}
+
+exports.deleteTokenByUserId = async(table, idUser) => {
+    var client = new MongoClient(url, opt); //tao bien doi ket noi
+	await client.connect();
+    var db = client.db(dataBase);
+    var ret = await db.collection(table).deleteOne({idUser: idUser}); 
+    await client.close();
+    return ret;
 }
