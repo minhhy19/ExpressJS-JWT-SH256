@@ -71,7 +71,7 @@ exports.delete = async(table, id) => {
 }
 
 //============================================================================================================
-
+// USER
 exports.fetchByUsername = async(table, username) => {
     var client = new MongoClient(url, opt); //tao bien doi ket noi
     await client.connect();
@@ -81,12 +81,32 @@ exports.fetchByUsername = async(table, username) => {
     return a;
 }
 
+// exports.fetchNameById = async(table, id) => {
+//     var hex = /[0-9A-Fa-f]{6}/g; // kiểm tra có đúng định dạng id hay k?
+//     id = (hex.test(id)) ? mongodb.ObjectId(id) : mongodb.ObjectId();
+// 	var client = new MongoClient(url, opt); //tao bien doi ket noi
+// 	await client.connect();
+//     var db = client.db(dataBase); //khi co  tin hieu thi 
+//     var a = await db.collection(table).findOne({_id: id});
+//     await client.close();
+// 	return a;
+// }
+
 //================================================================================================================
 exports.fetchTokenByIdUser = async(table, idUser) => {
     var client = new MongoClient(url, opt); //tao bien doi ket noi
     await client.connect();
     var db = client.db(dataBase); //khi co  tin hieu thi 
     var a = await db.collection(table).findOne({idUser: idUser});
+    await client.close();
+    return a;
+}
+
+exports.fetchTokenByRefreshToken = async(table, token) => {
+    var client = new MongoClient(url, opt); //tao bien doi ket noi
+    await client.connect();
+    var db = client.db(dataBase); //khi co  tin hieu thi 
+    var a = await db.collection(table).findOne({value: token});
     await client.close();
     return a;
 }

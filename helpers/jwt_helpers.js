@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken');
-var TokenModel = require('../models/TokenModel.js');
+var TokenModel = require('../models/Token.model');
 
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
             next();
         } catch (err) {
             // res.status(400).send('Invalid Token')
-            res.status(400).send(err);
+            res.send({code: '400', msg: err});
         }
     },
     signRefreshToken: (userId) => {
@@ -40,7 +40,7 @@ module.exports = {
             var payload = {};
             var secret = process.env.REFRESH_TOKEN_SECRET
             var options = {
-                expiresIn: '1y',
+                expiresIn: '2d',
                 audience: userId
             }
             jwt.sign(payload, secret, options, async (err, token) => {
