@@ -8,6 +8,11 @@ exports.getTokenByRefreshToken = async (token) => {
 	return await rep.fetchTokenByRefreshToken('Token', token);
 }
 
+exports.getTokenByRefreshTokenArray = async (token) => {
+	return await rep.fetchTokenByRefreshTokenArray('Token', token);
+}
+
+
 exports.addToken = async (o) => {
 	return await rep.add('Token', o);
 }

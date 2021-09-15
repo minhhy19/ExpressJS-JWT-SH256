@@ -58,9 +58,9 @@ module.exports = {
             var { refreshToken } = req.body;
             // if (!refreshToken) throw createError.BadRequest();
             if (!refreshToken) throw '400';
-            
+
             var checkTokenDb = await TokenModel.getTokenByRefreshToken(refreshToken);
-            if(!checkTokenDb) throw '403';
+            if (!checkTokenDb) throw '403';
 
             var userId = await verifyRefreshToken(refreshToken);
             var accessToken = await signAccessToken(userId);
@@ -83,7 +83,12 @@ module.exports = {
             if (!refreshToken) throw '400';
 
             var userId = await verifyRefreshToken(refreshToken);
-            var deleteToken = await TokenModel.deleteTokenByUserId(userId);
+
+            // delete refresh token
+            var a = await TokenModel.getTokenByIdUser(userId);
+            var arr = a.value.filter(ref => ref !== refreshToken);
+            await TokenModel.updateTokenByIdUser(userId, { value: arr });
+            // var deleteToken = await TokenModel.deleteTokenByUserId(userId);
             // console.log(userId);
             // console.log(deleteToken);
             res.send({ code: '200', msg: "success" });

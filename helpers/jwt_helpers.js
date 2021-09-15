@@ -32,7 +32,7 @@ module.exports = {
             next();
         } catch (err) {
             // res.status(400).send('Invalid Token')
-            res.send({code: '400', msg: err});
+            res.send({ code: '400', msg: err });
         }
     },
     signRefreshToken: (userId) => {
@@ -55,12 +55,14 @@ module.exports = {
                     if (!checkToken) {
                         await TokenModel.addToken({
                             idUser: userId,
-                            value: token
+                            value: [token]
                         })
                     } else {
-                        await TokenModel.updateTokenByIdUser(userId, { value: token });
+                        var array = checkToken.value;
+                        array.push(token);
+                        await TokenModel.updateTokenByIdUser(userId, { value: array });
                     }
-                } catch(error) {
+                } catch (error) {
                     reject(err);
                 }
 
@@ -71,14 +73,26 @@ module.exports = {
     verifyRefreshToken: (refreshToken) => {
         return new Promise((resolve, reject) => {
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, payload) => {
-                if (err) return reject(err);
+                if (err) {
+                    if (err.message === 'jwt expired') {  // delete refresh token in db when token expired
+                        try {
+                            // console.log('token het han');
+                            var a = await TokenModel.getTokenByRefreshTokenArray(refreshToken);
+                            var arr = a.value.filter(ref => ref !== refreshToken);
+                            await TokenModel.updateTokenByIdUser(a.idUser, { value: arr });
+                        } catch (e) { reject(e); }
+
+                    }
+                    return reject(err);
+                }
                 var userId = payload.aud;
                 try {
                     var userToken = await TokenModel.getTokenByIdUser(userId);
-                    if(refreshToken === userToken.value) {
+                    // if(refreshToken === userToken.value) {
+                    if (userToken.value.includes(refreshToken)) {
                         resolve(userId);
                     } else throw '403';
-                } catch(error) {
+                } catch (error) {
                     reject(error);
                 }
             })

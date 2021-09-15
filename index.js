@@ -5,7 +5,7 @@ var app = express();
 
 var dotenv = require('dotenv');
 dotenv.config();
-var PORT = process.env.PORT || 3300;
+var PORT = process.env.PORT || 5500;
 
 
 app.use(cors());

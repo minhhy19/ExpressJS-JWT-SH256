@@ -111,6 +111,15 @@ exports.fetchTokenByRefreshToken = async(table, token) => {
     return a;
 }
 
+exports.fetchTokenByRefreshTokenArray = async(table, token) => {
+    var client = new MongoClient(url, opt); //tao bien doi ket noi
+    await client.connect();
+    var db = client.db(dataBase); //khi co  tin hieu thi 
+    var a = await db.collection(table).findOne({value: { $all: [token] }});
+    await client.close();
+    return a;
+}
+
 exports.updateTokenByIdUser = async(table, idUser, o) => {
     var client = new MongoClient(url, opt); //tao bien doi ket noi
     await client.connect();
