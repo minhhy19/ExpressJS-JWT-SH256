@@ -7,3 +7,7 @@ exports.addUser = async (o) => {
 exports.getUserByUsername = async (username) => {
 	return await rep.fetchByUsername('User', username);
 }
+
+exports.getUserById = async (id) => {
+	return await rep.fetchOne('User', id);
+}
