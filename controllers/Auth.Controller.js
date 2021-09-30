@@ -25,7 +25,7 @@ module.exports = {
         };
         try {
             var saveUser = await UserModel.addUser(user);
-            res.send({ userId: saveUser.insertedId });
+            res.send({ code: '200', userId: saveUser.insertedId });
         } catch (err) {
             res.send({ code: '500', msg: 'Internal Server Error' });
         }
